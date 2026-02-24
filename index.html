@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Java-Logic Calc</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --calc-bg: #1e293b;
+            --btn-gray: #334155;
+            --btn-accent: #3b82f6;
+            --btn-danger: #ef4444;
+            --text-light: #f8fafc;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .calculator {
+            background-color: var(--calc-bg);
+            width: 100%;
+            max-width: 360px;
+            padding: 24px;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        #display {
+            width: 100%;
+            height: 80px;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            text-align: right;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            outline: none;
+            word-wrap: break-word;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        button {
+            aspect-ratio: 1;
+            border: none;
+            border-radius: 16px;
+            background: var(--btn-gray);
+            color: var(--text-light);
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.1s, background 0.2s;
+        }
+
+        button:active {
+            transform: scale(0.92);
+            background: #475569;
+        }
+
+        .sci { background: #1e293b; color: var(--btn-accent); font-size: 0.9rem; }
+        .op { background: var(--btn-accent); color: white; }
+        .clear { background: var(--btn-danger); color: white; }
+        .wide { grid-column: span 2; aspect-ratio: auto; }
+
+        /* Label for scientific mode */
+        .mode-label {
+            color: #64748b;
+            font-size: 0.7rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator">
+    <div class="mode-label">Scientific Mode (Java-Math Engine)</div>
+    <input type="text" id="display" placeholder="0" readonly>
+    
+    <div class="grid">
+        <button class="sci" onclick="append('Math.sin(')">sin</button>
+        <button class="sci" onclick="append('Math.cos(')">cos</button>
+        <button class="sci" onclick="append('Math.sqrt(')">√</button>
+        <button class="sci" onclick="append('**')">^</button>
+
+        <button class="clear wide" onclick="clearDisplay()">AC</button>
+        <button class="sci" onclick="backspace()">⌫</button>
+        <button class="op" onclick="append('/')">÷</button>
+
+        <button onclick="append('7')">7</button>
+        <button onclick="append('8')">8</button>
+        <button onclick="append('9')">9</button>
+        <button class="op" onclick="append('*')">×</button>
+
+        <button onclick="append('4')">4</button>
+        <button onclick="append('5')">5</button>
+        <button onclick="append('6')">6</button>
+        <button class="op" onclick="append('-')">-</button>
+
+        <button onclick="append('1')">1</button>
+        <button onclick="append('2')">2</button>
+        <button onclick="append('3')">3</button>
+        <button class="op" onclick="append('+')">+</button>
+
+        <button onclick="append('0')">0</button>
+        <button onclick="append('.')">.</button>
+        <button onclick="append('Math.PI')">π</button>
+        <button class="op" onclick="calculate()">=</button>
+    </div>
+</div>
+
+<script>
+    const display = document.getElementById('display');
+
+    function append(val) {
+        if (display.value === "Error") clearDisplay();
+        display.value += val;
+    }
+
+    function clearDisplay() {
+        display.value = '';
+    }
+
+    function backspace() {
+        display.value = display.value.slice(0, -1);
+    }
+
+    function calculate() {
+        try {
+            // Evaluates using JS Math functions which mirror Java Math class
+            let result = eval(display.value);
+            
+            // Format long decimals like Java's DecimalFormat
+            if (result % 1 !== 0) {
+                result = parseFloat(result.toFixed(8));
+            }
+            display.value = result;
+        } catch (e) {
+            display.value = "Error";
+        }
+    }
+</script>
+
+</body>
+</html>
